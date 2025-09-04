@@ -99,3 +99,30 @@ def test_find_correct_choice_ids():
     c1 = question.add_choice('a', True)
     c2 = question.add_choice('b', False)
     assert question._find_correct_choice_ids() == [c1.id]
+
+    
+# ------------------------------
+# Fixture
+# ------------------------------
+
+@pytest.fixture
+def sample_question():
+    """Retorna uma questão com 3 alternativas, sendo a primeira correta."""
+    q = Question(title="Sample Question", max_selections=2)
+    c1 = q.add_choice("Option A", True)
+    c2 = q.add_choice("Option B", False)
+    c3 = q.add_choice("Option C", False)
+    return q
+
+# ------------------------------
+# Testes usando a fixture
+# ------------------------------
+
+def test_fixture_question_has_choices(sample_question):
+    assert len(sample_question.choices) == 3
+    assert any(c.is_correct for c in sample_question.choices)
+
+def test_fixture_correct_selection(sample_question):
+    correct_ids = [c.id for c in sample_question.choices if c.is_correct]
+    result = sample_question.correct_selected_choices(correct_ids)
+    assert result == correct_ids
